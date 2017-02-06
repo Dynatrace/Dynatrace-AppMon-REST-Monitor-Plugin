@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: com.realdolmen.dynatrace.restmonitor;singleton:=t
+ rue
+Bundle-Name: REST Monitor
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Require-Bundle: com.dynatrace.diagnostics.sdk,
+ com.dynatrace.diagnostics.httpclient,com.dynatrace.diagnostics.util
+Bundle-ManifestVersion: 2
+Bundle-Vendor: Realdolmen
+Bundle-Localization: plugin
+Built-By: builduser
+Implementation-Version: 6.5.0.1289

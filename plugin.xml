@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="com.realdolmen.dynatrace.restmonitor" name="REST Monitor">
+    <information>
+      <category value="Remote" />
+      <displayname value="%PLUGIN_CONFIG_NAME" />
+      <description value="%PLUGIN_CONFIG_DESCRIPTION" />
+      <supportlevel value="unsupported" />
+    </information>
+    <configuration>
+      <property key="protocol" label="Protocol" type="list" description="Select the protocol that will be used to establish the connection. If 'https' is selected, a secure connection will be made using SSL." default="http">
+        <list>
+          <item value="http" />
+          <item value="https" />
+        </list>
+      </property>
+      <property key="httpPort" label="Port" type="long" description="Enter the port number of the webserver. The default HTTP port is 80. Pass -1 to ignore the port." default="80">
+        <visibility>
+          <rule key="protocol" value="http" />
+        </visibility>
+      </property>
+      <property key="httpsPort" label="Port" type="long" description="Enter the port number of the webserver. The default port for HTTP over SSL is 443. Pass -1 to ignore the port." default="443">
+        <visibility>
+          <rule key="protocol" value="https" />
+        </visibility>
+      </property>
+      <property key="path" label="Path" type="string" description="Enter the path to the webpage to be monitored. Example: /index.html" default="/" multiline="false" />
+      <property key="method" label="Method" type="list" description="Specify the type of the HTTP request. GET: retrieve the page content, HEAD: retrieve HTTP headers only, POST: send data with the request and retrive the page content (e.g. used for HTML forms)" default="GET">
+        <list>
+          <item value="GET" />
+          <item value="HEAD" />
+          <item value="POST" />
+        </list>
+      </property>
+      <property key="postData" label="POST Data" type="string" description="The data which will be sent with the POST request." default="" multiline="false">
+        <visibility>
+          <rule key="method" value="POST" />
+        </visibility>
+      </property>
+      <property key="responseFormat" label="Response Format" type="list" description="The format of the HTTP response. JSON or XML." default="JSON">
+        <list>
+          <item value="JSON" />
+          <item value="XML" />
+        </list>
+      </property>
+      <property key="httpVersion" label="HTTP version" type="list" description="The version of the HTTP protocol. HTTP/1.1 is the recommended." default="1.1">
+        <list>
+          <item value="1.1" />
+          <item value="1.0" />
+        </list>
+      </property>
+      <property key="userAgent" label="User-Agent" type="string" description="The user agent string identifies the HTTP client and is sent with every request." default="dynaTrace/6" multiline="false" />
+      <property key="serverAuth" label="Server authorization" type="list" description="Specify the authentication type to be used." default="Disabled">
+        <list>
+          <item value="Disabled" />
+          <item value="Basic" />
+          <item value="NTLM" />
+        </list>
+      </property>
+      <property key="serverUsername" label="Server username" type="string" description="The username that is used for authorization with the server. For NTLM authentication use a DOMAIN\username notation." default="" multiline="false">
+        <visibility>
+          <rule key="serverAuth" value="Basic" />
+          <rule key="serverAuth" value="NTLM" />
+        </visibility>
+      </property>
+      <property key="serverPassword" label="Server password" type="password" description="The password for the username." default="">
+        <visibility>
+          <rule key="serverAuth" value="Basic" />
+          <rule key="serverAuth" value="NTLM" />
+        </visibility>
+      </property>
+      <property key="serverAuthPreemptive" label="Preemptive server authentication" type="boolean" description="If enabled, preemptive authentication will be used to connect to the URL" default="false">
+        <visibility>
+          <rule key="serverAuth" value="Basic" />
+        </visibility>
+      </property>
+      <property key="socketTimeout" label="Socket Timeout" type="long" description="The timeout for socket connection in miliseconds. Default is 60000 (1 minute), setting this to 0 will disable the timeout." default="60000" />
+      <property key="connectionTimeout" label="Connection Timeout" type="long" description="The timeout for connection acquisition in miliseconds. Default is 60000 (1 minute), setting this to 0 will disable the timeout." default="60000" />
+      <property key="useProxy" label="Proxy" type="boolean" description="If enabled, the configured HTTP proxy server will be used to access the URL." default="false" />
+      <property key="proxyHost" label="Proxy host" type="string" description="The hostname of the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPort" label="Proxy port" type="long" description="The port of the HTTP proxy server." default="8080">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyAuth" label="Proxy authorization" type="boolean" description="If the HTTP proxy server requires a username and a password for access, proxy authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyUsername" label="Proxy username" type="string" description="The username that is used for authorization with the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPassword" label="Proxy password" type="password" description="The password for the proxy username." default="">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyAuthPreemptive" label="Preemptive proxy authentication" type="boolean" description="If enabled, preemptive authentication will be used authenticate against the proxy." default="false">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTagging" label="Dynatrace Tagging" type="boolean" description="Enable Dynatrace tagging." default="true" />
+      <property key="dtTimerName" label="timer name" type="string" description="Identify this webrequest through a unique timer name. The timer name will be sent with each web request as a Dynatrace header field value." default="" multiline="false">
+        <visibility>
+          <rule key="dtTagging" value="true" />
+        </visibility>
+      </property>
+      <property key="ignoreCertificate" label="Disable certificate validation" type="boolean" description="Enable to allow connections via SSL even if the certificate of the target host does not match the host name or is self-signed." default="false" />
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="com.realdolmen.dynatrace.restmonitor.monitor" name="REST Monitor">
+    <plugin configid="com.realdolmen.dynatrace.restmonitor" class="com.realdolmen.dynatrace.restmonitor.RestMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="com.realdolmen.dynatrace.restmonitor.monitor.mgconnection" name="REST Monitor Connection">
+    <metricgroup
+          displayname="%METRICGROUP_REST_MONITOR"
+          monitorid="com.realdolmen.dynatrace.restmonitor.monitor">
+      <metric
+            defaultrate="none"
+            description="%METRIC_HOST_REACHABLE_DESCRIPTION"
+            displayname="%METRIC_HOST_REACHABLE_LABEL"
+            hidedisplayaggregation="sum count"
+            name="HostReachable"
+            unit="number"/>
+      <metric
+            defaultrate="none"
+            description="%METRIC_HEADER_SIZE_DESCRIPTION"
+            displayname="%METRIC_HEADER_SIZE_LABEL"
+            name="HeaderSize"
+            unit="bytes"/>
+      <metric
+            defaultrate="none"
+            description="%METRIC_FIRST_RESPONSE_DELAY_DESCRIPTION"
+            displayname="%METRIC_FIRST_RESPONSE_DELAY_LABEL"
+            hidedisplayaggregation="sum count"
+            name="FirstResponseDelay"
+            unit="ms"/>
+      <metric
+            defaultrate="none"
+            description="%METRIC_RESPONSE_COMPLETE_TIME_DESCRIPTION"
+            displayname="%METRIC_RESPONSE_COMPLETE_TIME_LABEL"
+            hidedisplayaggregation="sum count"
+            name="ResponseCompleteTime"
+            unit="ms"/>
+      <metric
+            defaultrate="none"
+            description="%METRIC_RESPONSE_SIZE_DESCRIPTION"
+            displayname="%METRIC_RESPONSE_SIZE_LABEL"
+            name="ResponseSize"
+            unit="bytes"/>
+      <metric
+            defaultrate="sec"
+            description="%METRIC_THROUGHPUT_DESCRIPTION"
+            displayname="%METRIC_THROUGHPUT_LABEL"
+            hidedisplayaggregation="sum count"
+            name="Throughput"
+            unit="kilobytes"/>
+      <metric
+            defaultrate="none"
+            description="%METRIC_HTTP_STATUS_CODE_DESCRIPTION"
+            displayname="%METRIC_HTTP_STATUS_CODE_LABEL"
+            hidedisplayaggregation="sum count"
+            name="HttpStatusCode"
+            unit="number"/>
+      <metric
+            defaultrate="none"
+            description="%METRIC_CONNECTION_CLOSE_DELAY_DESCRIPTION"
+            displayname="%METRIC_CONNECTION_CLOSE_DELAY_LABEL"
+            hidedisplayaggregation="sum count"
+            name="ConnectionCloseDelay"
+            unit="ms"/>
+      <metric
+            defaultrate="none"
+            description="%METRIC_SOCKET_TIMEDOUT_DESCRIPTION"
+            displayname="%METRIC_SOCKET_TIMEDOUT_LABEL"
+            hidedisplayaggregation="sum count"
+            name="SocketTimedOut"
+            unit="number"/>
+      <metric
+            defaultrate="none"
+            description="%METRIC_CONNECTION_TIMEDOUT_DESCRIPTION"
+            displayname="%METRIC_CONNECTION_TIMEDOUT_LABEL"
+            hidedisplayaggregation="sum count"
+            name="ConnectionTimedOut"
+            unit="number"/>
+    </metricgroup>
+    <information>
+      <description value="%METRICGROUP_CONNECTION_REST_MONITOR_DESCRIPTION" />
+    </information>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="com.realdolmen.dynatrace.restmonitor.monitor.mgmeasures" name="REST Monitor Measures">
+    <metricgroup monitorid="com.realdolmen.dynatrace.restmonitor.monitor">
+      <metric 
+      		defaultrate="none" 
+      		name="capturedValue" 
+      		unit="number" 
+      		description="%METRIC_CAPTUREDVALUE_DESCRIPTION"
+      		displayname="%METRIC_CAPTUREDVALUE_LABEL" >
+        		<property key="xjsonPath" value="$.store.book[0].price" optional="false" />
+        		<property key="conversionMap" value="" optional="true" />
+      </metric>
+    </metricgroup>
+    <information>
+      <description value="%METRICGROUP_MEASURES_REST_MONITOR_DESCRIPTION" />
+    </information>
+  </extension>
+</plugin>
