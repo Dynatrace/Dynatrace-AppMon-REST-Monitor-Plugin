@@ -5,21 +5,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.logging.Logger;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 import org.xml.sax.InputSource;
 
 import com.dynatrace.diagnostics.pdk.MonitorEnvironment;
 import com.dynatrace.diagnostics.pdk.MonitorMeasure;
 import com.dynatrace.diagnostics.util.modern.StringUtil;
 import com.jayway.jsonpath.JsonPath;
+
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 
 /**
  * @author heydenb
@@ -32,19 +35,25 @@ public class MeasureCapturedValues {
 	private static final String PARAM_XJSONPATH = "xjsonPath";
 	private static final String PARAM_CONVERSIONMAP = "conversionMap";
 	
+	private static final Logger log = Logger.getLogger(RestMonitor.class.getName());
+	
 	private MonitorEnvironment monitorEnvironment;
 
 	/**
 	 * @param env
 	 */
 	MeasureCapturedValues(MonitorEnvironment env) {
+		log.info("constructor");
 		this.monitorEnvironment = env;
 	}
 	
 	void applyMeasuresToEnvironment(String body, ResponseFormat format) throws RestMonitorConfigurationException{
 		Collection<MonitorMeasure> measures;
 		
+		log.info("applyMeasuresToEnvironment");
+		
 		if ((measures = monitorEnvironment.getMonitorMeasures(METRIC_GROUP, METRIC_NAME)) != null) {
+			log.info("measures count " + measures.size());
 			for (MonitorMeasure measure : measures){
 				String pathExpression = measure.getParameter(PARAM_XJSONPATH);
 				String conversionMapJson = measure.getParameter(PARAM_CONVERSIONMAP);
@@ -71,15 +80,15 @@ public class MeasureCapturedValues {
 	 * @return the parsed JSON as Map
 	 * @throws RestMonitorConfigurationException
 	 */
-	@SuppressWarnings("unchecked")
 	Map<String, Double> createConversionMap(String json) throws RestMonitorConfigurationException {
-		JSONParser parser = new JSONParser();
+		JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
 		JSONObject obj = null;
 		try {
 			obj = (JSONObject)parser.parse(json);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			throw new RestMonitorConfigurationException("ConversionMap parse error: " + e.getMessage());
 		}
+		
 		Map<String, Double> map = new HashMap<String, Double>();
 		try {
 			obj.forEach(new BiConsumer<String, Object>() {

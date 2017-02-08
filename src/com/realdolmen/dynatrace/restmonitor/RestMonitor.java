@@ -147,14 +147,19 @@ public class RestMonitor implements Monitor {
 			measureConnection.headerResponseReceived();
 			measureConnection.setHttpStatusCode(response.getStatusCode());
 			measureConnection.setHeaderSize(calculateHeaderSize(response));
-			log.fine("http request succeed. code=" + response.getStatusCode());
+			log.info("http request succeed. code=" + response.getStatusCode());
 
 			// read response data (only if more than the header was requested)
 			if (config.method != RequestType.HEAD) {
 				try {
+					log.fine("start loading result content");
 					StringBuilder resultContent = loadResultContent(response, measureConnection);
-					final MeasureCapturedValues measureCapturedValues = new MeasureCapturedValues(env);
-					measureCapturedValues.applyMeasuresToEnvironment(resultContent.toString(), config.format);
+					log.fine("result content loaded ... ");
+					if (resultContent!=null){
+						messageBuffer.append("content: " + resultContent.toString());
+						final MeasureCapturedValues measureCapturedValues = new MeasureCapturedValues(env);
+						measureCapturedValues.applyMeasuresToEnvironment(resultContent.toString(), config.format);
+					}
 				} catch (IOException e) {
 					log.log(Level.FINE, "reading content failed", e);
 					status.setException(e);
@@ -169,6 +174,13 @@ public class RestMonitor implements Monitor {
 					status.setShortMessage(e.getMessage());
 					messageBuffer.append("Error capturing measures: ").append(e.getClass().getSimpleName()).append(": ").append(
 							e.getMessage()).append("\n");
+				} catch (Exception e) {
+					log.log(Level.FINE, "configuration fault", e);
+					status.setException(e);
+					status.setStatusCode(Status.StatusCode.ErrorInternal);
+					status.setShortMessage(e.getMessage());
+					messageBuffer.append("Error internal: ").append(e.getClass().getSimpleName()).append(": ").append(
+						e.getMessage()).append("\n");
 				}
 			} else {
 				measureConnection.loadResponseContentFinished();
@@ -194,12 +206,25 @@ public class RestMonitor implements Monitor {
 			} else {
 				status.setShortMessage(e.getClass().getSimpleName() + ": " + e.getMessage());
 			}
-		} finally {
+		} catch (Exception e){
+			log.log(Level.SEVERE, "unknown error", e);
+			status.setException(e);
+			status.setStatusCode(Status.StatusCode.ErrorInternal);
+			messageBuffer.append("Caused by: ").append(e.getClass().getSimpleName()).append(": ").append(
+					e.getMessage()).append("\n");
+			e.fillInStackTrace();
+			for (StackTraceElement el : e.getStackTrace()){
+				messageBuffer.append(el.toString()).append("\n");
+			}
+		}
+		finally {
 			// always release the connection
 			if (response != null)
 				response.close();
 			measureConnection.closingFinished();
 		}
+		
+		log.info("parsed!");
 
 		measureConnection.applyBinaryMeasuresToEnvironment();
 		if (status.getStatusCode() == Status.StatusCode.Success)
