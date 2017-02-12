@@ -12,7 +12,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-
 import org.xml.sax.InputSource;
 
 import com.dynatrace.diagnostics.pdk.MonitorEnvironment;
@@ -22,7 +21,6 @@ import com.jayway.jsonpath.JsonPath;
 
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 
 /**
  * @author heydenb

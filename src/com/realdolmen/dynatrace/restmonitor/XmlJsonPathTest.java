@@ -199,5 +199,22 @@ public class XmlJsonPathTest {
 		}
 		
 		System.out.println(mcv.extractXPathValue(xml, "/dashboardreport/data/chartdashlet/measures/measure/@thresholds", mcv.createConversionMap("{\"true\":1.0,\"false\":0.0}")));
+		
+		/*
+		InputStream inputStream = new FileInputStream("path-to-xml.xml");
+		StringBuilder buf = new StringBuilder();
+		if (inputStream != null) {
+			int bytesRead;
+			byte[] data = new byte[1024];
+			String charset = "UTF-8";
+			
+			while ((bytesRead = inputStream.read(data)) > 0) {
+				buf.append(EncodingUtils.getString(data, 0, bytesRead, charset));
+			}
+			inputStream.close();
+		}
+		
+		System.out.println(mcv.extractXPathValue(buf.toString(), "/dashboardreport/data/chartdashlet[1]/measures[1]/measure[1]/measure[1]/measurement[1]/@avg", null));
+		*/
 	}
 }

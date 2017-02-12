@@ -156,7 +156,9 @@ public class RestMonitor implements Monitor {
 					StringBuilder resultContent = loadResultContent(response, measureConnection);
 					log.fine("result content loaded ... ");
 					if (resultContent!=null){
-						messageBuffer.append("content: " + resultContent.toString());
+						if (log.isLoggable(Level.FINE)){
+							messageBuffer.append("content: \n" + resultContent.toString());
+						}
 						final MeasureCapturedValues measureCapturedValues = new MeasureCapturedValues(env);
 						measureCapturedValues.applyMeasuresToEnvironment(resultContent.toString(), config.format);
 					}
