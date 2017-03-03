@@ -17,7 +17,10 @@ Depending on the response type you need to define an xpath or jsonpath expressio
 
 The result of the expression must be a numeric value. If this is not the case, the conversionMap can be used to map String values to Numeric values. It is read as a simple json object structure. For example `{"SUCCESS":0.0,"WARN":1.0,"ERROR":2.0}` or `{"true":1.0,"false":0.0}`
 
-## Release notes ##
+## Download and support
+Refer to the [community page for the REST Monitor Plugin](https://community.dynatrace.com/community/display/DL/REST+Monitor+Plugin) for download and support. 
+
+## Release notes
 
 > **1.0.0**
 > - First public version
