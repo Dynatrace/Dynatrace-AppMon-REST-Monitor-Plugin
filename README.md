@@ -24,6 +24,7 @@ Refer to the [community page for the REST Monitor Plugin](https://community.dyna
 
 > **1.0.0**
 > - First public version
+
 > **1.2.0**
 > - Fixes regarding Manifest config and XML support non existent nodes.
 
