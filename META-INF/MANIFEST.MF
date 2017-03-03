@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: com.realdolmen.dynatrace.restmonitor;singleton:=t
  rue
 Bundle-Name: REST Monitor
-Bundle-Version: 1.0.0
+Bundle-Version: 1.2.0
 Bundle-ClassPath: .,lib/json-smart-2.2.1.jar,lib/slf4j-api-1.7.16.jar,lib/asm-5.0.3.jar,lib/json-path-2.2.0.jar,lib/accessors-smart-1.1.jar
 Require-Bundle: com.dynatrace.diagnostics.sdk,
  com.dynatrace.diagnostics.httpclient,com.dynatrace.diagnostics.util
@@ -11,4 +11,3 @@ Bundle-Vendor: Realdolmen
 Bundle-Localization: plugin
 Built-By: builduser
 Implementation-Version: 6.5.0.1289
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8

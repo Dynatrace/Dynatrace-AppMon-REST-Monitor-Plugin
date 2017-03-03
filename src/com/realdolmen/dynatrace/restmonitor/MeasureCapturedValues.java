@@ -34,6 +34,7 @@ public class MeasureCapturedValues {
 	private static final String PARAM_CONVERSIONMAP = "conversionMap";
 	
 	private static final Logger log = Logger.getLogger(RestMonitor.class.getName());
+	private static final String DEFAULT_RESULT = "0.0";
 	
 	private MonitorEnvironment monitorEnvironment;
 
@@ -166,7 +167,7 @@ public class MeasureCapturedValues {
 		InputSource inputSource = new InputSource( new StringReader(xmlBody));
 		XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
-		String result = "0.0";
+		String result = DEFAULT_RESULT;
 		try {
 			XPathExpression expr = xpath.compile(xPathExpression);
 			result = expr.evaluate(inputSource);
@@ -174,6 +175,9 @@ public class MeasureCapturedValues {
 			throw new RestMonitorConfigurationException("XPath Expression error: " + e.getMessage(), e);
 		}
 		if (conversionMap == null){
+			if (result==null || result.length()==0){
+				result = DEFAULT_RESULT;
+			}
 			try {
 				return Double.parseDouble(result);
 			}
